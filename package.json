@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
+  "engines": {
+    "node": "10.10.0"
+  },
   "scripts": {
-    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
