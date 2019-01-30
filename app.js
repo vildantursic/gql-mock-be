@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.json({
-    message: 'Welcome to GQL Demo!'
+    message: 'Welcome to GQL Demo!!!'
   })
 })
 
