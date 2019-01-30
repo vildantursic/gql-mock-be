@@ -2,6 +2,20 @@ const faker = require('faker');
 const Meetup = require('../../models/meetup')
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
+const { GraphQLObjectType, GraphQLString, GraphQLInt } = require('graphql');
+
+const MeetupType = new GraphQLObjectType({
+    name: 'Meetup',
+    fields: () => ({
+        title: { 
+            type: GraphQLString,
+            resolve: () => {
+                
+            }
+        },
+        description: { type: GraphQLString }
+    }),
+})
 
 const meetupResolvers = {
     meetups: async ({ fake, limit, skip }) => {
