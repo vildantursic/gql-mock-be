@@ -1,7 +1,7 @@
 const faker = require('faker');
 const Meetup = require('../../models/meetup')
 const { generateData } = require('../../helpers/index')
-const pubsub = require('../../helpers/pubsub')
+const { pubsub } = require('../../helpers/pubsub')
 
 const meetupModel = `
     title: String!
@@ -38,8 +38,8 @@ const meetupResolvers = {
 			return await Meetup.find().limit(limit).skip(skip).lean().exec()
 		}
     },
-    createMeetup: async (req) => {
-        const meetup = new Meetup(req.body);
+    addMeetup: async (req) => {
+        const meetup = new Meetup(req.input);
         const res = await meetup.save();
         pubsub.publish('meetups', { meetupAdded: res })
         return res;

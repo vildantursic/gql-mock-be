@@ -1,4 +1,4 @@
-const pubsub = require('../../helpers/pubsub')
+const { pubsub } = require('../../helpers/pubsub')
 
 const USER_ADDED_TOPIC = 'users';
 const MEETUP_ADDED_TOPIC = 'meetups';

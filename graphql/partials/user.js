@@ -1,7 +1,7 @@
 const User = require('../../models/user')
 const faker = require('faker');
 const { generateData } = require('../../helpers/index')
-const pubsub = require('../../helpers/pubsub')
+const { pubsub } = require('../../helpers/pubsub')
 
 const userModel = `
 	name: String!
@@ -33,8 +33,8 @@ const userResolvers = {
 			return await User.find().limit(limit).skip(skip).lean().exec()
 		}
 	},
-	createUser: async (req) => {
-		const user = new User(req.body);
+	addUser: async (req) => {
+		const user = new User(req.input);
 		const res = await user.save();
         pubsub.publish('users', { userAdded: res })
 		return res;

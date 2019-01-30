@@ -16,13 +16,13 @@ type Query {
 }
 
 type Mutation {
-    createUser(body: UserInput): User
-    createMeetup(body: MeetupInput): Meetup
+    addUser(input: UserInput): User
+    addMeetup(input: MeetupInput): Meetup
 }
 
 type Subscription {
-    userAdded: [User!]!
-    meetupAdded: [Meetup!]!
+    userAdded: User!
+    meetupAdded: Meetup!
 }
 
 schema {
