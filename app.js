@@ -26,11 +26,10 @@ app.use(
   })
 );
 
-app.post('/vote', async (req, res) => {
-  req.body.code = faker.random.uuid();
-  const vote = new Vote(req.body);
-  const data = await vote.save();
-  res.json(data);
+app.post('/', async (req, res) => {
+  res.json({
+    message: 'Welcome to GQL DEMO!'
+  })
 })
 
 mongoose
