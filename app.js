@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   })
 })
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers, playground: process.env.PLAYGROUND });
 server.applyMiddleware({ app });
 
 const httpServer = createServer(app);
