@@ -1,4 +1,3 @@
-const gql = require('graphql-tag');
 const User = require('../../models/user')
 const faker = require('faker');
 const { generateData } = require('../../helpers/index')

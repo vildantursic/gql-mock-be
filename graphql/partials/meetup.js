@@ -1,5 +1,4 @@
 const faker = require('faker');
-const gql = require('graphql-tag');
 const Meetup = require('../../models/meetup')
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
