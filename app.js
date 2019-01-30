@@ -15,6 +15,12 @@ const app = express();
 app.use(cors())
 app.use(bodyParser.json());
 
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to GQL Demo!'
+  })
+})
+
 const server = new ApolloServer({ typeDefs, resolvers });
 server.applyMiddleware({ app });
 
