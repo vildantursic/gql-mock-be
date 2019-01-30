@@ -1,5 +1,4 @@
 const { buildSchema } = require('graphql');
-const gql = require('graphql-tag');
 const { userSchema, userResolvers } = require('./partials/user')
 const { meetupSchema, meetupResolvers } = require('./partials/meetup')
 const { subscriptionResolvers } = require('./partials/subscription')
