@@ -3,23 +3,6 @@ const faker = require('faker');
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
 
-const userModel = `
-	name: String!
-	surname: String!
-	age: Int!
-`
-
-const userSchema = `
-    type User {
-		_id: String!
-		${userModel}
-	}
-	
-	input UserInput{
-		${userModel}
-	}
-`;
-
 const userResolvers = {
 	users: async ({ fake, limit, skip }) => {
 		if (fake === true) {
@@ -33,15 +16,14 @@ const userResolvers = {
 			return await User.find().limit(limit).skip(skip).lean().exec()
 		}
 	},
-	createUser: async (req) => {
-		const user = new User(req.body);
-		const res = await user.save();
-        pubsub.publish('users', { userAdded: res })
-		return res;
-	}
+	// createUser: async (req) => {
+	// 	const user = new User(req.body);
+	// 	const res = await user.save();
+    //     pubsub.publish('users', { userAdded: res })
+	// 	return res;
+	// }
 }
 
 module.exports = {
-	userSchema,
 	userResolvers
 }

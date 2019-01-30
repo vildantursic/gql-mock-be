@@ -3,23 +3,6 @@ const Meetup = require('../../models/meetup')
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
 
-const meetupModel = `
-    title: String!
-    description: String!
-`
-
-const meetupSchema = `
-    type Meetup {
-        _id: String!
-        ${meetupModel}
-        attendees: [User!]!
-    }
-
-    input MeetupInput {
-        ${meetupModel}
-    }    
-`;
-
 const meetupResolvers = {
     meetups: async ({ fake, limit, skip }) => {
         if (fake === true) {
@@ -38,15 +21,14 @@ const meetupResolvers = {
 			return await Meetup.find().limit(limit).skip(skip).lean().exec()
 		}
     },
-    createMeetup: async (req) => {
-        const meetup = new Meetup(req.body);
-        const res = await meetup.save();
-        pubsub.publish('meetups', { meetupAdded: res })
-        return res;
-    }
+    // createMeetup: async (req) => {
+    //     const meetup = new Meetup(req.body);
+    //     const res = await meetup.save();
+    //     pubsub.publish('meetups', { meetupAdded: res })
+    //     return res;
+    // }
 }
 
 module.exports = {
-    meetupSchema,
     meetupResolvers
 }

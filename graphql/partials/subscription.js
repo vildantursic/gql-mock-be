@@ -6,16 +6,10 @@ const MEETUP_ADDED_TOPIC = 'meetups';
 const subscriptionResolvers = {
   Subscription: {
     userAdded: {
-        resolve: (payload, args, context, info) => {
-            return payload.users;
-        },
-        subscribe: () => pubsub.asyncIterator(USER_ADDED_TOPIC),
+        subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('users')
     },
     meetupAdded: {
-        resolve: (payload, args, context, info) => {
-            return payload.meetups;
-        },
-        subscribe: () => pubsub.asyncIterator(MEETUP_ADDED_TOPIC),
+        subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('meetups')
     }
   },
 }

@@ -1,41 +1,56 @@
-const { buildSchema } = require('graphql');
-const { userSchema, userResolvers } = require('./partials/user')
-const { meetupSchema, meetupResolvers } = require('./partials/meetup')
-const { subscriptionResolvers } = require('./partials/subscription')
+const { userResolvers } = require('./partials/user')
+const { meetupResolvers } = require('./partials/meetup')
 const { merge } = require('lodash');
+const { gql } = require('apollo-server-express');
 
-const schema = buildSchema(`
+const typeDefs = gql`
 
-${userSchema}
+type User {
+    _id: String!
+    name: String!
+    surname: String!
+    age: Int!
+}
 
-${meetupSchema}
+input UserInput{
+    name: String!
+    surname: String!
+    age: Int!
+}
+
+type Meetup {
+    _id: String!
+    title: String!
+    description: String!
+    attendees: [User!]!
+}
+
+input MeetupInput {
+    title: String!
+    description: String!
+} 
 
 type Query {
     users(fake: Boolean, limit: Int, skip: Int): [User!]!
     meetups(fake: Boolean, limit: Int, skip: Int): [Meetup!]!
 }
 
-type Mutation {
-    createUser(body: UserInput): User
-    createMeetup(body: MeetupInput): Meetup
+# type Mutation {
+#     createUser(body: UserInput): User!
+#     createMeetup(body: MeetupInput): Meetup!
+# }
+
+`
+
+// const resolvers = merge(userResolvers, meetupResolvers)
+const resolvers = {
+    Query: {
+        ...userResolvers,
+        ...meetupResolvers
+    }
 }
-
-type Subscription {
-    userAdded: [User!]!
-    meetupAdded: [Meetup!]!
-}
-
-schema {
-    query: Query
-    mutation: Mutation
-    subscription: Subscription
-}
-
-`)
-
-const resolvers = merge(userResolvers, meetupResolvers, subscriptionResolvers)
 
 module.exports = {
-    schema,
+    typeDefs,
     resolvers
 }
