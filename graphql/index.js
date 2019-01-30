@@ -1,9 +1,24 @@
 const { userResolvers } = require('./partials/user')
 const { meetupResolvers } = require('./partials/meetup')
-const { merge } = require('lodash');
+const { voteResolvers } = require('./partials/vote')
+const { meetupAdded, userAdded, voteAdded } = require('./partials/subscription')
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
+
+type Vote {
+    _id: String!
+    status: Boolean!
+}
+
+type Votes {
+    left: Int!
+    right: Int!
+}
+
+input VoteInput{
+    status: Boolean!
+}
 
 type User {
     _id: String!
@@ -33,20 +48,46 @@ input MeetupInput {
 type Query {
     users(fake: Boolean, limit: Int, skip: Int): [User!]!
     meetups(fake: Boolean, limit: Int, skip: Int): [Meetup!]!
+    votes: [Vote!]!
+    numOfVotes: Votes!
 }
 
-# type Mutation {
-#     createUser(body: UserInput): User!
-#     createMeetup(body: MeetupInput): Meetup!
-# }
+type Mutation {
+    addUser(input: UserInput): User!
+    addMeetup(input: MeetupInput): Meetup!
+    addVote(input: VoteInput): Vote!
+}
+
+type Subscription {
+  userAdded: User!
+  meetupAdded: Meetup!
+  voteAdded: Votes!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+    subscription: Subscription
+}
 
 `
 
-// const resolvers = merge(userResolvers, meetupResolvers)
 const resolvers = {
     Query: {
-        ...userResolvers,
-        ...meetupResolvers
+        users: userResolvers.users,
+        meetups: meetupResolvers.meetups,
+        votes: voteResolvers.votes,
+        numOfVotes: voteResolvers.numOfVotes
+    },
+    Mutation: {
+        addUser: userResolvers.addUser,
+        addMeetup: meetupResolvers.addMeetup,
+        addVote: voteResolvers.addVote
+    },
+    Subscription: {
+        userAdded: userAdded,
+        meetupAdded: meetupAdded,
+        voteAdded: voteAdded
     }
 }
 

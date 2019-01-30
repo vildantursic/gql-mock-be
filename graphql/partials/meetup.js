@@ -2,15 +2,18 @@ const faker = require('faker');
 const Meetup = require('../../models/meetup')
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
+const {
+    MEETUP_ADDED
+} = require('./actions.js')
 
 const meetupResolvers = {
-    meetups: async ({ fake, limit, skip }) => {
-        if (fake === true) {
-			return generateData(limit, skip, {
+    meetups: async (root, args) => {
+        if (args.fake === true) {
+			return generateData(args.limit, args.skip, {
                 _id: faker.random.uuid,
                 title: faker.lorem.text,
                 description: faker.lorem.text,
-                attendees: generateData(limit, skip, {
+                attendees: generateData(args.limit, args.skip, {
                     _id: faker.random.uuid,
                     name: faker.name.firstName,
                     surname: faker.name.lastName,
@@ -18,15 +21,19 @@ const meetupResolvers = {
                 })
             })
 		} else {
-			return await Meetup.find().limit(limit).skip(skip).lean().exec()
+			return await Meetup.find().limit(args.limit).skip(args.skip).lean().exec()
 		}
     },
-    // createMeetup: async (req) => {
-    //     const meetup = new Meetup(req.body);
-    //     const res = await meetup.save();
-    //     pubsub.publish('meetups', { meetupAdded: res })
-    //     return res;
-    // }
+    addMeetup: async (root, args) => {
+        try {
+            const meetup = new Meetup(args.input);
+            const res = await meetup.save();
+            pubsub.publish(MEETUP_ADDED, { meetupAdded: res })
+            return res;
+        } catch(err) {
+            console.log(err)
+        }
+    }
 }
 
 module.exports = {

@@ -1,0 +1,9 @@
+const USER_ADDED = 'USER_ADDED';
+const MEETUP_ADDED = 'MEETUP_ADDED';
+const VOTE_ADDED = 'VOTE_ADDED';
+
+module.exports = {
+    USER_ADDED,
+    MEETUP_ADDED,
+    VOTE_ADDED
+}

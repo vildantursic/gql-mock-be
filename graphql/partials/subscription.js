@@ -1,17 +1,20 @@
 const pubsub = require('../../helpers/pubsub')
-
-const USER_ADDED_TOPIC = 'users';
-const MEETUP_ADDED_TOPIC = 'meetups';
+const {
+  USER_ADDED,
+  MEETUP_ADDED,
+  VOTE_ADDED
+} = require('./actions.js')
 
 const subscriptionResolvers = {
-  Subscription: {
-    userAdded: {
-        subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('users')
-    },
-    meetupAdded: {
-        subscribe: (parent, args, { pubsub }) => pubsub.asyncIterator('meetups')
-    }
+  userAdded: {
+      subscribe: () => pubsub.asyncIterator([USER_ADDED])
   },
+  meetupAdded: {
+      subscribe: () => pubsub.asyncIterator([MEETUP_ADDED])
+  },
+  voteAdded: {
+    subscribe: () => pubsub.asyncIterator([VOTE_ADDED])
+  }
 }
 
 module.exports = subscriptionResolvers;
