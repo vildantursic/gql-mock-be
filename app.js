@@ -22,7 +22,7 @@ app.use(
   })
 );
 
-app.get('/schema', (req, res) => {
+app.get('/', (req, res) => {
   res.send(schema)
 })
 
