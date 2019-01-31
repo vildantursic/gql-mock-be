@@ -15,9 +15,12 @@ async function calculateVotes () {
 }
 
 const voteResolvers = {
-
 	votes: async (root, args) => {
-        return await Vote.find().lean().exec()
+        try {
+            return await Vote.find().lean().exec()
+        } catch (err) {
+			console.log(err)            
+        }
     },
     numOfVotes: async (root, args) => {
         return await calculateVotes()
@@ -28,10 +31,19 @@ const voteResolvers = {
 			const res = await vote.save();
 			pubsub.publish(VOTE_ADDED, { voteAdded: await calculateVotes() })
 			return res;
-		} catch(err) {
+		} catch (err) {
 			console.log(err)
 		}
-	}
+    },
+    clearVotes: async (root, args) => {
+        try {
+            await Vote.remove({});
+            pubsub.publish(VOTE_ADDED, { voteAdded: await calculateVotes() })
+            return true;
+        } catch (err) {
+			console.log(err)
+        }
+    }
 }
 
 module.exports = {

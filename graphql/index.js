@@ -56,6 +56,7 @@ type Mutation {
     addUser(input: UserInput): User!
     addMeetup(input: MeetupInput): Meetup!
     addVote(input: VoteInput): Vote!
+    clearVotes: Boolean!
 }
 
 type Subscription {
@@ -82,7 +83,8 @@ const resolvers = {
     Mutation: {
         addUser: userResolvers.addUser,
         addMeetup: meetupResolvers.addMeetup,
-        addVote: voteResolvers.addVote
+        addVote: voteResolvers.addVote,
+        clearVotes: voteResolvers.clearVotes
     },
     Subscription: {
         userAdded: userAdded,
