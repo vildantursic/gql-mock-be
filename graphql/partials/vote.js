@@ -39,6 +39,7 @@ const voteResolvers = {
     clearVotes: async (root, args) => {
         try {
             await Vote.remove({});
+			pubsub.publish(VOTE_ADDED, { voteAdded: await calculateVotes() })
             pubsub.publish(VOTES_CLEARED, { votesCleared: { status: true } })
             return true;
         } catch (err) {
