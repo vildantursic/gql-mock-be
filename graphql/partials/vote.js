@@ -2,7 +2,8 @@ const Vote = require('../../models/vote')
 const { generateData } = require('../../helpers/index')
 const pubsub = require('../../helpers/pubsub')
 const {
-    VOTE_ADDED
+    VOTE_ADDED,
+    VOTES_CLEARED
 } = require('./actions.js')
 
 async function calculateVotes () {
@@ -38,7 +39,7 @@ const voteResolvers = {
     clearVotes: async (root, args) => {
         try {
             await Vote.remove({});
-            pubsub.publish(VOTE_ADDED, { voteAdded: await calculateVotes() })
+            pubsub.publish(VOTES_CLEARED, { votesCleared: { status: true } })
             return true;
         } catch (err) {
 			console.log(err)

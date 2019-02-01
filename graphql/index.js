@@ -1,7 +1,7 @@
 const { userResolvers } = require('./partials/user')
 const { meetupResolvers } = require('./partials/meetup')
 const { voteResolvers } = require('./partials/vote')
-const { meetupAdded, userAdded, voteAdded } = require('./partials/subscription')
+const { meetupAdded, userAdded, voteAdded, votesCleared } = require('./partials/subscription')
 const { gql } = require('apollo-server-express');
 
 const typeDefs = gql`
@@ -16,7 +16,11 @@ type Votes {
     right: Int!
 }
 
-input VoteInput{
+input VoteInput {
+    status: Boolean!
+}
+
+type VotesCleared {
     status: Boolean!
 }
 
@@ -63,6 +67,7 @@ type Subscription {
   userAdded: User!
   meetupAdded: Meetup!
   voteAdded: Votes!
+  votesCleared: VotesCleared!
 }
 
 schema {
@@ -89,7 +94,8 @@ const resolvers = {
     Subscription: {
         userAdded: userAdded,
         meetupAdded: meetupAdded,
-        voteAdded: voteAdded
+        voteAdded: voteAdded,
+        votesCleared: votesCleared
     }
 }
 

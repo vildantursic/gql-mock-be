@@ -2,7 +2,8 @@ const pubsub = require('../../helpers/pubsub')
 const {
   USER_ADDED,
   MEETUP_ADDED,
-  VOTE_ADDED
+  VOTE_ADDED,
+  VOTES_CLEARED
 } = require('./actions.js')
 
 const subscriptionResolvers = {
@@ -14,6 +15,9 @@ const subscriptionResolvers = {
   },
   voteAdded: {
     subscribe: () => pubsub.asyncIterator([VOTE_ADDED])
+  },
+  votesCleared: {
+    subscribe: () => pubsub.asyncIterator([VOTES_CLEARED])
   }
 }
 
