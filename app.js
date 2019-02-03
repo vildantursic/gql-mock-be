@@ -1,49 +1,42 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { createServer } = require('http');
-const { execute, subscribe } = require('graphql');
-const { ApolloServer } = require('apollo-server-express');
-const { SubscriptionServer } = require('subscriptions-transport-ws');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config()
 
-const { typeDefs, resolvers } = require('./graphql/index');
-
 const app = express();
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 app.use(cors())
 app.use(bodyParser.json());
 
-app.get('/', (req, res) => {
+io.on('connection', function (socket) {
+  console.log('connected')
+});
+
+var fetchData = require('./routes/fetch_data');
+
+app.use('/api/', fetchData);
+
+app.post('/api/remoteactions/execute/:type', (req, res) => {
+  io.emit('action', { type: req.params.type, obj: req.body });
+
   res.json({
-    message: 'Welcome to GQL Demo!!!'
+      type: req.params.type,
+      obj: req.body
   })
 })
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  playground: process.env.PLAYGROUND,
-  introspection: process.env.INTROSPECTION
-});
-server.applyMiddleware({ app });
-
-const httpServer = createServer(app);
-server.installSubscriptionHandlers(httpServer);
 
 mongoose
   .connect(`mongodb://vildantursic:${process.env.PASSWORD}@cluster0-shard-00-00-2zosu.mongodb.net:27017,cluster0-shard-00-01-2zosu.mongodb.net:27017,cluster0-shard-00-02-2zosu.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin&retryWrites=true`, {useNewUrlParser: true})
   .then(() => {
-    httpServer.listen(process.env.PORT || 4000, () => {
-      new SubscriptionServer({
-        execute,
-        subscribe,
-        schema: typeDefs,
-      }, {
-        server: app,
-        path: '/subscriptions',
-      });
+    server.listen(process.env.PORT || 4000, () => {
       console.log(`🚀 Server ready at http://localhost:4000`);
     })
   })
